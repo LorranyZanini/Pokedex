@@ -1,0 +1,11 @@
+--  Config do Git
+git config --global user.name LorranyZanini
+git config --global user.gmail lorranyzanini0@gmail.com
+
+-- Criar o gitgnore
+dotnet new gitignore
+
+-- Criar o projeto MVC
+dotnet new mvc -o Pokedex
+
+cd Pokedex
