@@ -9,3 +9,13 @@ dotnet new gitignore
 dotnet new mvc -o Pokedex
 
 cd Pokedex
+
+-- Pacote Nuget usado no projeto:
+dotnet add package Microsoft.EntityFrameworkCore --version 9.0.8
+dotnet add package Pomelo.EntityFrameworkCore.MySql --version 9.0.0
+
+-- Para compilar o projeto
+dotnet build
+
+-> A camada de contexto é criada a partir de heranças, não diretamente
+-> Nada mais é a classe que liga o projeto ao banco (ela representa o banco)
