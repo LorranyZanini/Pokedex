@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Pokedex.Data;
 using Pokedex.Models;
+using Pokedex.ViewModels;
 
 namespace Pokedex.Controllers;
 
@@ -18,8 +20,36 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var pokemons = _db.Pokemons.ToList();
+        var pokemons = _db.Pokemons
+            .Include(p => p.Regiao)
+            .Include(p => p.Genero)
+            .Include(p => p.Tipos)
+            .ThenInclude(t => t.Tipo)
+            .ToList();
         return View(pokemons);
+    }
+
+    public IActionResult Details(int id)
+    {
+        Pokemon pokemon = _db.Pokemons
+            .Where(p => p.Numero == id) //usar ele melhora a performance e rapidez da pesquisa (por causa dos filtros)
+            .Include(p => p.Regiao)
+            .Include(p => p.Genero)
+            .Include(p => p.Tipos)
+            .ThenInclude(t => t.Tipo)
+            .SingleOrDefault();
+        
+        DetailsVM detail = new()
+        {
+            Atual = pokemon,
+            Anterior = _db.Pokemons
+                .OrderByDescending(p => p.Numero)
+                .FirstOrDefault(p => p.Numero < id),
+            Proximo = _db.Pokemons
+                .OrderBy(p => p.Numero)
+                .FirstOrDefault(p => p.Numero > id)
+        };
+        return View(detail);
     }
 
     public IActionResult Privacy()
