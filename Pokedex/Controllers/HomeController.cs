@@ -20,13 +20,15 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var pokemons = _db.Pokemons
-            .Include(p => p.Regiao)
-            .Include(p => p.Genero)
-            .Include(p => p.Tipos)
-            .ThenInclude(t => t.Tipo)
-            .ToList();
-        return View(pokemons);
+        HomeVM home = new()
+        {
+            Pokemons = _db.Pokemons
+                .Include(p => p.Tipos)
+                .ThenInclude(t => t.Tipo)
+                .ToList(),
+            Tipos = _db.Tipos.ToList()
+        };
+        return View(home);
     }
 
     public IActionResult Details(int id)
